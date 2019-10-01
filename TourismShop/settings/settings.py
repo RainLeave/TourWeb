@@ -39,6 +39,22 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
+
+    'rest_framework.authtoken',
+    'rest_framework',
+    'pygments',
+
+    # Github-The following apps are required
+    # 'django.contrib.auth',
+    # 'django.contrib.messages',
+    # 'django.contrib.sites',
+    #
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # # 可添加需要的第三方登录
+    # 'allauth.socialaccount.providers.github',
+    # # 'allauth.socialaccount.providers.weibo',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -63,7 +79,9 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                # Already defined Django-related contexts here
                 'django.template.context_processors.debug',
+                # `allauth` needs this from django
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -130,3 +148,35 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#
+# AUTHENTICATION_BACKENDS = (
+#     # Needed to login by username in Django admin, regardless of `allauth`
+#     'django.contrib.auth.backends.ModelBackend',
+#
+#     # `allauth` specific authentication methods, such as login by e-mail
+#     'allauth.account.auth_backends.AuthenticationBackend',
+# )
+#
+# # 设置站点
+# SITE_ID = 1
+#
+# # 登录成功后重定向地址
+# LOGIN_REDIRECT_URL = '/'
+#
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.BasicAuthentication',
+#         'rest_framework.authentication.SessionAuthentication',
+#         'rest_framework.authentication.TokenAuthentication',
+#         # 默认的定义的认证，不需要在views中写认证类
+#         # 视图函数中也不需要写    authentication_classes = [xx,]
+#         # 默认是会应用到所有的视图函数
+#         'TourismWeb.utils.auth.FisrtAuthentication',
+#         'TourismWeb.utils.auth.Authentication',
+#     ]
+# }
+
+# TODO: 现在有一个问题，就是全局配置的认证类指向的路径配置只能放在默认项目的settings.py下，否则无法访问到
+# 因为api_setting就是指向默认项目的默认的setting.py默认路径
+# 需要加上日志检测，信号量，缓存

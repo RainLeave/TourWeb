@@ -99,7 +99,7 @@ class User(AbstractUser):
         ('female', u"女")
     )
     nickname = models.CharField(max_length=30,
-                                null=True, blank=True, verbose_name=u"昵称")
+                                null=False, blank=False, verbose_name=u"昵称")
     # 与旅游证件保持一致
     first_name = models.CharField(max_length=30,
                             null=True, blank=True, verbose_name=u"名")
@@ -165,6 +165,21 @@ class User(AbstractUser):
             return True
         return False
 
+# TODO：需要设置一个用户类型的字段或者别，区分针对不同类别的用户可以访问的数据也不同
+# 用户注册模型
+
+
+# drf官网
+# from django.conf import settings
+# from django.db.models.signals import post_save
+# from django.dispatch import receiver
+# from rest_framework.authtoken.models import Token
+#
+#
+# @receiver(post_save, sender=settings.AUTH_USER_MODEL)
+# def create_auth_token(sender, instance=None, created=False, **kwargs):
+#     if created:
+#         Token.objects.create(user=instance)
 
 
 
