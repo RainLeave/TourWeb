@@ -4,6 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
 from datetime import timedelta, datetime
+import uuid
+from django.utils.translation import ugettext_lazy as _
 
 
 class Country(models.Model):
@@ -98,14 +100,27 @@ class User(AbstractUser):
         ('male', u"男"),
         ('female', u"女")
     )
+    ADMIN, TOURIST, TOURUSER = range(3)
+    USER_ROLE = (
+        (ADMIN, 'admin'),
+        (TOURIST, 'tourist'),
+        (TOURUSER, 'touruser')
+    )
     nickname = models.CharField(max_length=30,
                                 null=False, blank=False, verbose_name=u"昵称")
+
     # 与旅游证件保持一致
     first_name = models.CharField(max_length=30,
                             null=True, blank=True, verbose_name=u"名")
     # 与旅游证件保持一致
     last_surname = models.CharField(max_length=30,
                                null=True, blank=True, verbose_name=u"姓")
+    user_role = models.PositiveSmallIntegerField(
+        default=TOURIST,
+        choices=USER_ROLE,
+        help_text=_("0:admin; 1:tourist,2:touruser"),
+    )
+
     country_region = models.ForeignKey(Country, max_length=30, on_delete=models.PROTECT,
                                        null=True, blank=True,
                                        verbose_name=u"国家/地区代码")
@@ -119,6 +134,17 @@ class User(AbstractUser):
     # 用于接收凭证或者短信通知
     email = models.EmailField(max_length=100,
                               null=True, blank=True, verbose_name=u"邮箱")
+    # photo_url = models.CharField(
+    #     max_length=1024,
+    #     default='',
+    #     null=True
+    # )
+    # photo_url = models.ImageField(upload_to = "/", null=True)
+
+    # default activated
+    is_active = models.BooleanField(
+        _('active'),
+        default=True)
 
     objects = MyUserManager()
 
@@ -168,7 +194,7 @@ class User(AbstractUser):
 
 class TourToken(models.Model):
     # user = models.OneToOneField(to='User', on_delete=models.PROTECT)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.OneToOneField(User, on_delete=models.PROTECT)
 
     # user = models.CharField(max_length=64)
 
@@ -185,6 +211,23 @@ class test(models.Model):
 # TODO：需要设置一个用户类型的字段或者别，区分针对不同类别的用户可以访问的数据也不同python manage.py makemigrations
 # 用户注册模型
 
+
+class Register(models.Model):
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    email = models.EmailField(null=False)
+
+    first_name = models.CharField(_('First Name'), max_length=50, default='', null=True)
+
+    last_name = models.CharField(_('Last Name'), max_length=50, default='', null=True)
+
+    last_login = models.DateTimeField(auto_now_add=True)
+
+    # password = 'password'
+    mobile = models.CharField(_('Mobile'), max_length=50, default='', null=True)
+
+    is_active = models.BooleanField(default=False)
 
 # drf官网
 # from django.conf import settings

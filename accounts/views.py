@@ -7,7 +7,8 @@ from rest_framework.response import Response
 
 # from rest_framework.authtoken.models import Token
 from accounts.models import User, TourToken
-
+from rest_framework.generics import GenericAPIView
+from rest_framework import status
 #
 # class UserLoginViewSet(viewsets.ModelViewSet):
 #     queryset = User.objects.all()
@@ -101,6 +102,21 @@ class UserInfoView(APIView):
 
 
 # TODO：用户退出登录，用户注册，用户密码重置，用户个人信息修改功能实现
+class UserLogoutView(GenericAPIView):
+    """
+    用户退出登录
+    存在检测用户数据？因为是post方法
+    """
+    authentication_classes = [TourWebAuthentication, ]
+    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [MyPermission, ]
+
+    def post(self, request):
+        TourToken.objects.filter(user=request.user).updat(expires=datetime.datetime.now())
+        return Response(status=status.HTTP_200_OK)
+
+
+
 
 # 商品模块功能的实现：商品列表，商品类别，购物车功能
 # 支付模块实现
