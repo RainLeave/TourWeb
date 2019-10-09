@@ -20,12 +20,15 @@ from django.conf.urls import url, include
 # drf
 from rest_framework import routers, serializers
 from accounts.models import User
-from accounts.views import UserLoginViewSet
+# from accounts.views import UserLoginViewSet
+from accounts.views import UserInfoView, UserLoginView
+
 from rest_framework.authtoken import views
 
-
+#
 router = routers.DefaultRouter()
-router.register(r'users', UserLoginViewSet)
+# router.register(r'users', UserLoginViewSet)
+#
 
 
 urlpatterns = [
@@ -42,5 +45,9 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    url(r'^api-token-auth/', views.obtain_auth_token)
+    # url(r'^api-token-auth/', views.obtain_auth_token),
+    # 基于类的视图 APIView
+    path(r'info/', UserInfoView.as_view()),
+    path(r'user/', UserLoginView.as_view()),
+
 ]

@@ -1,0 +1,436 @@
+————————————————
+官网：https://dev.mysql.com/doc/refman/8.0/en/creating-database.html
+————————————————
+1、pip install mysqlclient
+2、mysql -u root连接MySQL数据库，注意，这里是以root身份登录、
+root用户拥有对数据库进行所有操作的权限，我们需要在root用户下创建
+普通用户，比如charolim
+
+3、SELECT user,host FROM mysql.user; //先看下当前的数据库用户有哪些
+
+4、
+# 创建数据库用户charolim并设置密码为'123'
+# 和Django中设置文件中的数据库用户名密码保持一致
+CREATE USER 'charolim'@'localhost' IDENTIFIED BY '123';
+
+5、# 使用黄建的新用户charolim连接数据库，测试是否成功
+mysql -u charolim -p
+# 连接成功后，发现在charolim用户下，无法对数据库进行任何操作
+问题：
+# 这是因为还没有给charolim用户赋予权限
+mysql> CREATE DATABASE shopwen;
+ERROR 1044 (42000): Access denied for user 'charolim'@'localhost' to database 'shopwen'
+mysql> GRANT ALL ON *.* TO 'charolim'@'localhost';
+
+6、
+# 重新使用root用户登录
+mysql -u root
+
+7、# 在root用户下创建数据库shopweb,同时赋予chrolim用户对shopweb下的表进行所有操作的权限
+mysql> CREATE DATABASE shopweb;
+Query OK, 1 row affected (0.18 sec)
+
+mysql> GRANT ALL ON shopweb.* TO 'charolim'@'localhost';
+Query OK, 0 rows affected (0.15 sec)
+
+查阅文档：
+https://blog.csdn.net/huxinguang_ios/article/details/80887175
+https://stackoverflow.com/questions/20353402/access-denied-for-user-testlocalhost-using-password-yes-except-root-user
+
+————————————————
+MySQL官方文档：https://dev.mysql.com/doc/refman/8.0/en/connecting-disconnecting.html
+————————————————
+
+1、连接数据库
+shell> mysql -h host -u user -p
+shell> mysql -u user -p
+shell> mysql
+
+2、退出mysql终端
+mysql> QUIT
+Bye
+
+
+3、mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| djangolearn        |
+| information_schema |
+| shopweb            |
++--------------------+
+3 rows in set (0.26 sec)
+
+4、mysql> USE djangolearn;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql>
+
+5、mysql> SHOW tables;
++----------------------------+
+| Tables_in_djangolearn      |
++----------------------------+
+| article                    |
+| auth_group                 |
+| auth_group_permissions     |
+| auth_permission            |
+| auth_user                  |
+| auth_user_groups           |
+| auth_user_user_permissions |
+| django_admin_log           |
+| django_content_type        |
+| django_migrations          |
+| django_session             |
+| drflearn_userinfo          |
+| drflearn_usertoken         |
++----------------------------+
+13 rows in set (0.05 sec)
+
+6、要验证您的表是按预期方式创建的，请使用DESCRIBE语句：
+mysql> DESCRIBE pet;
+
+mysql> DESCRIBE drflearn_userinfo;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| id        | int(11)     | NO   | PRI | NULL    | auto_increment |
+| user_type | int(11)     | NO   |     | NULL    |                |
+| username  | varchar(32) | NO   | UNI | NULL    |                |
+| password  | varchar(64) | NO   |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+4 rows in set (0.06 sec)
+
+mysql>
+
+
+7 插入数据
+INSERT INTO drflearn_userinfo(user_type, username, password)
+    VALUES (1,'Diane','1234566');
+
+mysql> INSERT INTO drflearn_userinfo(user_type, username, password)
+    -> VALUES (1,'Diane','1234566');
+Query OK, 1 row affected (0.07 sec)
+
+
+————————————————
+ "GET /api/v1/order/username=Diane?&password=1234566 HTTP/1.1" 404 2368
+
+————————————————
+
+
+————————————————
+
+————————————————
+
+————————————————
+
+————————————————
+
+
+"""
+++++++++++
+项目目录
++++++++
+
+cd /Users/charolim/JunJun/MyWorks/shoppingweb
+
+cd /Users/charolim/JunJun/MyWorks/shoppingweb
+
+charolimdeMacBook-Air:~ charolim$ source .bashrc1
+charolimdeMacBook-Air:~ charolim$ workon
+blog_env
+myworks_env
+charolimdeMacBook-Air:~ charolim$ work on myworks_env
+bash: work: command not found
+charolimdeMacBook-Air:~ charolim$ workon myworks_env
+(myworks_env) charolimdeMacBook-Air:~ charolim$
+
+
+"""
+++++++++++
+requirements
++++++++++
+"""
+# 生成依赖文件
+pip freeze >  requirements/dev.txt
+# 如果需要部署相关的工程，安装文件中的依赖即可
+pip install -r  requirements/dev.txt
+
+"""
+++++++++++
+数据库：Postgresql
+++++++++++
+"""
+# 数据库
+GRANT ALL PRIVILEGES ON DATABASE shopweb TO postgres;
+
+"""
+++++++++++
+数据库：MySQL
+++++++++++
+"""
+# 数据库
+SELECT user,host FROM mysql.user;
+
+
+# Django连接MySQL
+1、pip install pymysql
+2、pip install mysqlclient
+
+3、settings.py中连接的数据库设置为mysql
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'charolim',
+        'PASSWORD': '123'
+    }
+}
+4、mysql -u root连接MySQL数据库，注意，这里是以root身份登录
+root用户拥有对数据库进行所有操作的权限，我们需要在root用户下创建
+普通用户，比如charolim
+SELECT user,host FROM mysql.user; //先看下当前的数据库用户有哪些
+
+# 创建数据库用户charolim并设置密码为'123'
+# 和Django中设置文件中的数据库用户名密码保持一致
+CREATE USER 'charolim'@'localhost' IDENTIFIED BY '123';
+
+# 使用黄建的新用户charolim连接数据库，测试是否成功
+mysql -u charolim -p
+
+# 连接成功后，发现在charolim用户下，无法对数据库进行任何操作
+# 这是因为还没有给charolim用户赋予权限
+mysql> CREATE DATABASE shopwen;
+ERROR 1044 (42000): Access denied for user 'charolim'@'localhost' to database 'shopwen'
+mysql> GRANT ALL ON *.* TO 'charolim'@'localhost';
+
+# 重新使用root用户登录
+mysql -u root
+
+# 在root用户下创建数据库shopweb,同时赋予chrolim用户对shopweb下的表进行所有操作的权限
+
+mysql> CREATE DATABASE shopweb;
+Query OK, 1 row affected (0.18 sec)
+
+mysql> GRANT ALL ON shopweb.* TO 'charolim'@'localhost';
+Query OK, 0 rows affected (0.15 sec)
+
+
+8、mysql -u charolim -p
+
+9、SHOW DATABASES
+
+
+查阅文档：
+https://blog.csdn.net/huxinguang_ios/article/details/80887175
+https://stackoverflow.com/questions/20353402/access-denied-for-user-testlocalhost-using-password-yes-except-root-user
+
+
+
+"""
+++++++++++
+Vue
+++++++++++
+"""
+mac下
+1、安装node.js
+
+方法一：
+    npm -v
+    brew link node
+    brew uninstall node
+    brew install node
+    brew upgrade node
+    node --version
+
+方法二：可以通过安装包来安装node
+
+可以从https://nodejs.org/dist/下载node的安装包
+(mac为pkg格式，windows为msi格式)
+
+2、安装Vue.js devtools扩展程序
+
+    打开Chrome网上应用店，安装  Vue.js devtools插件。
+    这个插件，便于我们在进行Vue.js开发过程中的调试，是一个很有用的工具。
+
+3、安装cnpm
+
+    由于npm的官方镜像服务器是在国外，国内没有进行科学上网的同学安装依赖包时，
+    有时候速度会非常慢。因此，可采用淘宝的npm镜像，在命令行工具输入：
+    npm由于源服务器在国外下载node包经常超时，cnpm使用国内镜像，通过以下命令安装cnpm
+
+    npm install -g cnpm --registry=https://registry.npm.taobao.org
+
+    以后就可以使用cnpm来代替npm了。因此，如果已经安装了淘宝的npm镜像工具，vue-cli可以这样安装：
+
+    cnpm -v
+    node -v
+
+3. 安装vue-cli脚手架工具
+
+进行vue-cli的全局安装
+
+
+    vue --version: 查看安装的Vue.js的版本号
+
+    cnpm install -g vue-cli
+
+此时，项目环境的配置已经基本完成了
+
+4、项目的搭建
+进入创建项目的目录下，使用命令行工具，输入
+
+vue init <template-name> <project-name>
+
+即可开始创建项目
+
+这里需要***指定所使用模板的名称和项目的名称***
+
+<template-name>：模版名称，官方<https://github.com/vuejs-templates>
+一共提供了五个模版，分别为webpack、webpack-simple、browserify、browserify-simple、simple；
+project-name：项目名称。
+
+如现在我们在桌面创建一个名为first-project的项目，使用webpack模版：
+vue init webpack first-project
+
+输入并回车后，待下载完模版，会进入一系列的配置问题：
+****************************************************
+Project name：项目名称
+Project description：项目描述
+Author：作者
+Vue build：运行时与编译
+Install vue-router?：是否安装路由？
+Use ESLint to lint your code?：是否进行代码检测？
+Setup unit tests with Karma + Mocha?：是否进行单元测试？
+Setup e2e tests with Nightwatch?：是否进行端对端测试？
+****************************************************
+
+
+cd 项目名
+npm install
+npm run dev
+
+
+****************************************************
+(myworks_env) charolimdeMacBook-Air:MyWorks charolim$ vue init webpack shop_homepage
+
+? Project name shop_homepage
+? Project description A Vue.js project
+? Author charolim <1171039932@qq.com>
+? Vue build standalone
+? Install vue-router? Yes
+? Use ESLint to lint your code? Yes
+? Pick an ESLint preset Standard
+? Set up unit tests Yes
+? Pick a test runner jest
+? Setup e2e tests with Nightwatch? Yes
+? Should we run `npm install` for you after the project has been created? (recommended) (Use arrow keys)
+  Yes, use NPM
+> Yes, use Yarn
+   No, I will handle that myself
+****************************************************
+因为我最终选择用yarn来管理所以启动Vue的命令如下：
+cnpm install yarn
+yarn --version
+
+使用 webpack 打包Vusjs项目
+cd 项目名
+yarn/yarninstall
+yarn start/yarn run dev
+
+同时浏览器会自动打开页面，默认监听的端口为8080。
+另外，打开chrome浏览器控制台，便可以使用刚刚安装的Vue.js devtools扩展程序
+
+6、开始项目开发
+回到项目目录，整个项目的入口文件是在根目录下的index.html，js文件为src目录下的main.js。
+例如，在页面渲染hello Vue：
+页面会自动刷新，同时在vue扩展程序中我们可以看到Vue的数据：
+至此，一个Vue.js的项目搭建已经完成，剩下的工作就是愉快地开始代码的编写了。
+
+myworks_env) charolimdeMacBook-Air:MyWorks charolim$ vue --version
+2.9.6
+
+7、Vue项目下修改项目名或者删除项目
+
+
+【文档查阅：https://www.zybuluo.com/xudongh/note/758521和https://www.jianshu.com/p/3b30c4c846d1】
+
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> \l
+ERROR:
+Unknown command '\l'.
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\l' at line 1
+mysql> \l;
+ERROR:
+Unknown command '\l'.
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '\l' at line 1
+mysql> SELECT VERSION(), CURRENT_DATE;
++-----------+--------------+
+| VERSION() | CURRENT_DATE |
++-----------+--------------+
+| 8.0.17    | 2019-09-08   |
++-----------+--------------+
+1 row in set (0.19 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| shopweb            |
++--------------------+
+2 rows in set (0.93 sec)
+
+mysql> SHOW TABLES;
+ERROR 1046 (3D000): No database selected
+mysql> use shopweb;
+Database changed
+mysql> SHOW TABLES;
+Empty set (0.04 sec)
+
+mysql> CREATE TABLE Book(book_name VARCHAR(50),date_public DATE);
+Query OK, 0 rows affected (0.57 sec)
+
+mysql> SHOW TABLES;
++----------------------------+
+| Tables_in_shopweb          |
++----------------------------+
+| accounts_book              |
+| auth_group                 |
+| auth_group_permissions     |
+| auth_permission            |
+| auth_user                  |
+| auth_user_groups           |
+| auth_user_user_permissions |
+| Book                       |
+| django_admin_log           |
+| django_content_type        |
+| django_migrations          |
+| django_session             |
++----------------------------+
+12 rows in set (0.09 sec)
+
+mysql> desc accounts_book;
++-------------+-------------+------+-----+---------+----------------+
+| Field       | Type        | Null | Key | Default | Extra          |
++-------------+-------------+------+-----+---------+----------------+
+| id          | int(11)     | NO   | PRI | NULL    | auto_increment |
+| book_name   | varchar(50) | YES  |     | NULL    |                |
+| date_public | datetime(6) | NO   |     | NULL    |                |
++-------------+-------------+------+-----+---------+----------------+
+3 rows in set (0.58 sec)
+
+mysql> INSERT INTO accounts_book VALUES ('My Start');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO accounts_book VALUES ('Mybook');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO accounts_book VALUES ('Mybook','2019-02-01');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO accounts_book VALUES (1,'Mybook','2019-02-01');
+Query OK, 1 row affected (0.11 sec)
+
+mysql>

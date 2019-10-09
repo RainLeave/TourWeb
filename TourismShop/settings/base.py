@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
 
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
     'rest_framework',
     'pygments',
 
@@ -162,8 +162,8 @@ STATIC_URL = '/static/'
 # SITE_ID = 1
 #
 # # 登录成功后重定向地址
-# LOGIN_REDIRECT_URL = '/'
-#
+# # LOGIN_REDIRECT_URL = '/'
+# #
 # REST_FRAMEWORK = {
 #     'DEFAULT_AUTHENTICATION_CLASSES': [
 #         'rest_framework.authentication.BasicAuthentication',
@@ -172,10 +172,11 @@ STATIC_URL = '/static/'
 #         # 默认的定义的认证，不需要在views中写认证类
 #         # 视图函数中也不需要写    authentication_classes = [xx,]
 #         # 默认是会应用到所有的视图函数
-#         'TourismWeb.utils.auth.FisrtAuthentication',
+#         'TourismWeb.utils.auth.FirstAuthentication',
 #         'TourismWeb.utils.auth.Authentication',
 #     ]
 # }
+
 
 # TODO: 现在有一个问题，就是全局配置的认证类指向的路径配置只能放在默认项目的settings.py下，否则无法访问到
 # 因为api_setting就是指向默认项目的默认的setting.py默认路径

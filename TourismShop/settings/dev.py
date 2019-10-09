@@ -1,6 +1,7 @@
-from TourismShop.settings.settings import *  # NOQA (ignore all errors on this line)
+from TourismShop.settings.base import *  # NOQA (ignore all errors on this line)
 
 import os
+from TourismShop.settings import *
 
 
 # Database

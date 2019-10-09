@@ -165,7 +165,24 @@ class User(AbstractUser):
             return True
         return False
 
-# TODO：需要设置一个用户类型的字段或者别，区分针对不同类别的用户可以访问的数据也不同
+
+class TourToken(models.Model):
+    # user = models.OneToOneField(to='User', on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    # user = models.CharField(max_length=64)
+
+    token = models.CharField(max_length=64)
+
+    # def __str__(self):
+    #     return self.user
+
+
+class test(models.Model):
+    token = models.CharField(max_length=64)
+
+
+# TODO：需要设置一个用户类型的字段或者别，区分针对不同类别的用户可以访问的数据也不同python manage.py makemigrations
 # 用户注册模型
 
 
