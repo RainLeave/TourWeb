@@ -43,8 +43,9 @@ INSTALLED_APPS = [
     # 'rest_framework.authtoken',
     'rest_framework',
     'pygments',
+    'corsheaders',
 
-    # Github-The following apps are required
+# Github-The following apps are required
     # 'django.contrib.auth',
     # 'django.contrib.messages',
     # 'django.contrib.sites',
@@ -61,8 +62,11 @@ AUTH_USER_MODEL = 'accounts.User'
 
 
 MIDDLEWARE = [
+    # 'accounts.MyCsrfMiddleware.CORSMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # 注意顺序 一定是在common中间件的前面
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -177,7 +181,58 @@ STATIC_URL = '/static/'
 #     ]
 # }
 
-
+# 缓存设置
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'my_cache_table',
+    }
+}
 # TODO: 现在有一个问题，就是全局配置的认证类指向的路径配置只能放在默认项目的settings.py下，否则无法访问到
 # 因为api_setting就是指向默认项目的默认的setting.py默认路径
 # 需要加上日志检测，信号量，缓存
+
+
+# 基于云片网实现短信验证码
+APIKEY = '20f32a1f2040c57996b57ba7c7e66448'
+
+#手机号码正则表达式
+REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
+#
+# # CORS_ORIGIN_ALLOW_ALL = True
+# #跨域增加忽略
+# CORS_ALLOW_CREDENTIALS = True
+# CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = [
+#     "http://localhost:8000",
+#     "http://localhost:8083",
+# ]
+#
+# CORS_ALLOW_METHODS = (
+#     'DELETE',
+#     'GET',
+#     'OPTIONS',
+#     'PATCH',
+#     'POST',
+#     'PUT',
+#     'VIEW',
+# )
+#
+# CORS_ALLOW_HEADERS = (
+#     'XMLHttpRequest',
+#     'X_FILENAME',
+#     'accept-encoding',
+#     'authorization',
+#     'content-type',
+#     'dnt',
+#     'origin',
+#     'user-agent',
+#     'x-csrftoken',
+#     'x-requested-with',
+#     'Pragma',
+# )
+CORS_ORIGIN_ALLOW_ALL = True
+
+# 允许携带cookie:
+
+CORS_ALLOW_CREDENTIALS = True

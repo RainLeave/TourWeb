@@ -24,8 +24,8 @@ from accounts.models import User
 from accounts.views import UserInfoView, UserLoginView
 
 from rest_framework.authtoken import views
+from accounts import views
 
-#
 router = routers.DefaultRouter()
 # router.register(r'users', UserLoginViewSet)
 #
@@ -48,6 +48,8 @@ urlpatterns += [
     # url(r'^api-token-auth/', views.obtain_auth_token),
     # 基于类的视图 APIView
     path(r'info/', UserInfoView.as_view()),
-    path(r'user/', UserLoginView.as_view()),
+    url(r'user/', UserLoginView.as_view()),
+    # test ok
+    url(r'test/', views.test),
 
 ]

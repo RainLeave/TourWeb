@@ -133,9 +133,9 @@ REST_FRAMEWORK = {
     # 视图函数中也不需要写    authentication_classes = [xx,]
     # 默认是会应用到所有的视图函数
     #  DEFAULT_AUTHENTICATION_CLASSES作为键，值等于一个列表，列表中存放的不是认证类，而是引用，指向认证类的路径
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'accounts.utils.auth.Authentication',
-        ],
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'accounts.utils.auth.Authentication',
+    #     ],
     'UNAUTHENTICATED_USER': None,  # 最终返回UNAUTHENTICATED_USER 的值 +（）
     'UNAUTHENTICATED_TOKEN': None,
     # 全局配置权限

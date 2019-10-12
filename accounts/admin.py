@@ -21,9 +21,11 @@ from accounts.models import User, TourToken
 # 2.0以上使用装饰器
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display=('id', 'nickname', 'first_name', 'last_surname',
-                  # 'country_region',
-                  'birthday', 'gender', 'mobile',  'email')
+    # list_display=('id', 'nickname', 'first_name', 'last_surname',
+    #               # 'country_region',
+    #               'birthday', 'gender', 'mobile',  'email')
+    list_display=( 'nickname', 'mobile')
+
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

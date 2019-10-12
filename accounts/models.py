@@ -213,6 +213,13 @@ class test(models.Model):
 
 
 class Register(models.Model):
+    """
+    TourAPP注册方式有两种
+    1、邮箱注册
+    邮箱账户和密码
+    2、手机注册
+    手机号和验证码
+    """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
@@ -225,10 +232,17 @@ class Register(models.Model):
     last_login = models.DateTimeField(auto_now_add=True)
 
     # password = 'password'
+    password = models.CharField(_('password'), max_length=50, default='', null=True)
+
     mobile = models.CharField(_('Mobile'), max_length=50, default='', null=True)
 
     is_active = models.BooleanField(default=False)
 
+# TODO: 增加一个验证码模型
+
+
+class SmsCode(models.Model):
+    pass
 # drf官网
 # from django.conf import settings
 # from django.db.models.signals import post_save
@@ -271,3 +285,4 @@ class Register(models.Model):
 #         return self.book_name
 #
 
+# TODO: uniapp登录页面接口实现，同时实现前端接口联调

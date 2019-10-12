@@ -33,8 +33,9 @@ class TourWebAuthentication(object):
         # 在rest framework 内部会将这两个字段赋值给request，以供后续操作使用
         return (tokenobj.user, tokenobj)
 
-    # # 弹出一个框
-    # def authenticate_header(self, request):
+    # 弹出一个框
+    def authenticate_header(self, request):
+        pass
     #     # BasicAuthentication中的
     #     # BasicAuthentication基类方法响应头的作用
     #     # 认证就是基于浏览器来实现的

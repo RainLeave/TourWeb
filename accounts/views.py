@@ -21,6 +21,20 @@ from rest_framework import status
 #         return Response({"code": 0,
 #                              "msg": "login success!",
 #                              "token": token.key})
+from django.http import JsonResponse
+
+# from django.views.decorators.csrf import csrf_exempt
+
+
+# @csrf_exempt
+def test(request):
+    # import json
+    # obj = HttpResponse(json.dumps({"status": 0, "message": "This is Django Message！"}))
+    # # obj['Access-Control-Allow-Origin'] = '*'
+    # return obj
+
+    return JsonResponse({"status": 0, "message": "This is Django Message！"})
+
 
 def md5(user):
     """
@@ -58,6 +72,7 @@ class UserLoginView(APIView):
         # 用户通过手机号和用户昵称进行注册
         nickname = request._request.POST.get('nickname')
         mobile = request._request.POST.get('mobile')
+        print(nickname)
 
         obj = User.objects.filter(mobile=mobile, nickname=nickname)
 
@@ -68,7 +83,7 @@ class UserLoginView(APIView):
         # 为登录用户通过MD5来创建token
         token = md5(nickname)
         # 存在就更新，不存在就创建
-        TourToken.objects.update_or_create(user=obj, default={'token': token})
+        # TourToken.objects.update_or_create(user=obj, default={'token': token})
 
 
 
@@ -79,8 +94,9 @@ class UserLoginView(APIView):
 from django.http import  HttpResponse
 from accounts.utils.permissions import MyPermission
 from accounts.utils.auth import TourWebAuthentication
-
-
+from rest_framework.response import Response
+from rest_framework import status
+from accounts.models import SmsCode
 class UserInfoView(APIView):
     """
     用户信息
@@ -115,6 +131,66 @@ class UserLogoutView(GenericAPIView):
         TourToken.objects.filter(user=request.user).updat(expires=datetime.datetime.now())
         return Response(status=status.HTTP_200_OK)
 
+#
+# from rest_framework.mixins import CreateModelMixin
+# from rest_framework import viewsets
+# from accounts.utils.yunpian import YunPian
+# from TourismShop.settings.base import APIKEY
+# from random import choice
+#
+# # 自定义生成验证码的方法
+# def generate_code(self):
+#     """
+#     生成四位数字的验证码
+#     """
+#     # 种子
+#     seeds = "1234567890"
+#     random_str = []
+#     for i in range(4):
+#         random_str.append(choice(seeds))
+#
+#     # 数组转化为字符串
+#     return "".join(random_str)
+#
+#
+# # 创建一个新的验证码发送的类，继承于CreateModelMixin, viewsets
+# class SmsodeViewSet(CreateModelMixin, viewsets.GenericViewSet):
+#     """
+#     验证码发送是CREATE操作
+#     重载CreateModelMixin的create方法
+#     """
+#     def create(self, request, *args, **kwargs):
+#         # 获取到上面的serializer
+#         serializer = self.get_serializer(data=request.data)
+#         # 这里如果=True，这一步如果出错，直接抛异常，不会进入下面的代码行
+#         # 这里is_valid出错，返回400
+#         serializer.is_valid(raise_exception=True)
+#         # self.perform_create(serializer)
+#         # headers = self.get_success_headers(serializer.data)
+#         # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+#         # 上面已经验证了，能跑到这一步，所以mobile一定是有的
+#         mobile = serializer.validated_data["mobile"]
+#         yun_pian = YunPian(APIKEY)
+#         code = self.generate_code()
+#         # 返回的是re_dict，可以点进去看看
+#         sms_status = yun_pian.send_sms(code=code, mobile=mobile)
+#
+#         # 下面来解析这个变量
+#         # 返回的status代表的含义可以看一看云片网的文档
+#         if sms_status["code"] !=0 :
+#             return Response({
+#                 "mobile":sms_status["msg"]  # msg中放的是云片网错误信息
+#             }, status=status.HTTP_400_BAD_REQUEST)
+#         else:
+#             code_record = SmsCode(code=code, mobile=mobile)
+#             code_record.save()
+#             return Response({
+#                 "mobile": mobile
+#             }, status=status.HTTP_201_CREATED  # 成功后返回的是手机号
+#
+#
+#
+
 
 
 
@@ -130,16 +206,17 @@ class UserLogoutView(GenericAPIView):
 # curl -X POST -H "Content-Type: application/json"   -d '{"username": "12", "password": "Lijunjun123"}'   http://127.0.0.1:8000/api-token-auth/
 
 
-"""
-订单业务限制登录的人才可以看
-1、判断登录的用户
-2、如何实现
+#
+# 订单业务限制登录的人才可以看
+# 1、判断登录的用户
+# 2、如何实现
+#
 
 class OrderViewSet(GenericAPIView):
     serializer_class = UserSerializer
-    authentication_classes = (TourWebAuthenticate,)
+    # authentication_classes = (TourWebAuthenticate,)
     permission_classes = (IsAuthenticated,)
-    
+
     # 视图函数的第一个参数必须是request
     def post(self, request, *args, **kwargs):
         self.dispatch
@@ -147,7 +224,7 @@ class OrderViewSet(GenericAPIView):
         # User Login with email or phone
         # :param request:
         # :return:
-        # """
+        """
         # token = request._request.GET.get('token')
         # if not token:
         #     return HttpResponse("用户未登录")
